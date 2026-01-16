@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MD. ASIF HOSSAIN - 3D Snake</title>
+    <style>
+        body { margin: 0; background: radial-gradient(circle, #2c3e50, #000); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; font-family: sans-serif; touch-action: none; }
+        canvas { background: #111; border: 4px solid #fff; box-shadow: 0 0 30px rgba(46, 204, 113, 0.5); width: 300px; height: 300px; border-radius: 10px; }
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
+        .btn { width: 75px; height: 75px; background: #3498db; border: 3px solid #fff; border-radius: 50%; color: white; font-size: 30px; outline: none; box-shadow: 0 5px #2980b9; -webkit-tap-highlight-color: transparent; }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px #2980b9; }
+        .score { font-size: 26px; color: #f1c40f; margin-bottom: 10px; text-shadow: 2px 2px #000; }
+        .dev-name { margin-top: 15px; font-weight: bold; color: #2ecc71; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="score">3D SCORE: <span id="s">0</span></div>
+    <canvas id="g" width="400" height="400"></canvas>
+    <div class="dev-name">BY: MD. ASIF HOSSAIN</div>
+    <div class="controls">
+        <button class="btn" style="grid-column:2" onclick="c('u')">▲</button>
+        <button class="btn" style="grid-column:1" onclick="c('l')">◀</button>
+        <button class="btn" style="grid-column:3" onclick="c('r')">▶</button>
+        <button class="btn" style="grid-column:2" onclick="c('d')">▼</button>
+    </div>
+    <script>
+        const v=document.getElementById("g"),t=v.getContext("2d");let b=20,s=0,d="",f={x:160,y:160},sn=[{x:200,y:200}];
+        function c(k){if(k=='u'&&d!='d')d='u';if(k=='d'&&d!='u')d='d';if(k=='l'&&d!='r')d='l';if(k=='r'&&d!='l')d='r'}
+        function d3(x,y,c){
+            t.fillStyle=c;t.fillRect(x,y,b,b);
+            t.fillStyle="rgba(255,255,255,0.4)";t.fillRect(x,y,b,4);t.fillRect(x,y,4,b);
+            t.fillStyle="rgba(0,0,0,0.3)";t.fillRect(x,y+b-4,b,4);t.fillRect(x+b-4,y,4,b);
+        }
+        function draw(){
+            t.fillStyle="#111";t.fillRect(0,0,400,400);
+            d3(f.x,f.y,"#e74c3c");
+            sn.forEach((p,i)=>d3(p.x,p.y,i==0?"#2ecc71":"#27ae60"));
+            let hX=sn[0].x,hY=sn[0].y;
+            if(d=="u")hY-=b;if(d=="d")hY+=b;if(d=="l")hX-=b;if(d=="r")hX+=b;
+            if(hX==f.x&&hY==f.y){s++;document.getElementById("s").innerText=s;f={x:Math.floor(Math.random()*19)*b,y:Math.floor(Math.random()*19)*b}}else if(d!="")sn.pop();
+            let nH={x:hX,y:hY};
+            if(hX<0||hX>=400||hY<0||hY>=400||sn.some(p=>p.x==hX&&p.y==hY)){alert("GAME OVER! SCORE: "+s);location.reload()}
+            if(d!="")sn.unshift(nH);
+        } setInterval(draw,120);
+    </script>
+</body>
+</html>
