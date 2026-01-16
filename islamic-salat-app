@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salat Guide - MD. ASIF HOSSAIN</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0fdf4; color: #1a202c; margin: 0; padding: 0; }
+        .header { background: linear-gradient(135deg, #166534, #15803d); color: white; padding: 40px 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-left: 8px solid #166534; }
+        h1 { margin: 0; font-size: 28px; letter-spacing: 1px; }
+        h2 { color: #166534; margin-top: 0; border-bottom: 2px solid #f0fdf4; padding-bottom: 10px; }
+        .rakat-list { list-style: none; padding: 0; line-height: 2; font-size: 18px; }
+        .rakat-list li { border-bottom: 1px solid #f3f4f6; padding: 5px 0; }
+        .rakat-list b { color: #15803d; }
+        
+        /* Mentor & Dev Section - Ekhaney apnar Gurur Nam thakbe */
+        .credit-box { background: #166534; color: white; border-radius: 12px; padding: 20px; text-align: center; margin-top: 30px; }
+        .credit-box h3 { margin: 5px 0; font-size: 16px; text-transform: uppercase; opacity: 0.9; }
+        .credit-box .name { font-size: 22px; font-weight: bold; margin-bottom: 15px; display: block; color: #facc15; }
+        .divider { height: 1px; background: rgba(255,255,255,0.2); margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>ISLAMIC SALAT ASSISTANT</h1>
+    <p>Daily Prayer & Surah Guide</p>
+</div>
+
+<div class="container">
+    
+    <div class="card">
+        <h2>5 Daily Prayers</h2>
+        <ul class="rakat-list">
+            <li><b>Fajr:</b> 4 Rakats (2 Sunnat + 2 Farz)</li>
+            <li><b>Dhuhr:</b> 12 Rakats (4S + 4F + 2S + 2N)</li>
+            <li><b>Asr:</b> 8 Rakats (4 Sunnat + 4 Farz)</li>
+            <li><b>Maghrib:</b> 7 Rakats (3 Farz + 2S + 2N)</li>
+            <li><b>Isha:</b> 17 Rakats (4S + 4F + 2S + 2N + 3W + 2N)</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Essential Surahs</h2>
+        <p><b>1. Surah Al-Fatiha:</b><br>Alhamdu lillahi rabbil 'alamin...</p>
+        <p><b>2. Surah Al-Ikhlas:</b><br>Qul huwal laahu ahad. Allaahus samad...</p>
+    </div>
+
+    <div class="credit-box">
+        <h3>Developed By</h3>
+        <span class="name">MD. ASIF HOSSAIN</span>
+        
+        <div class="divider"></div>
+        
+        <h3>Mentor & Guide</h3>
+        <span class="name">ANKIT HOSSAIN SOJIB</span>
+    </div>
+
+</div>
+
+<footer style="text-align: center; padding: 20px; color: #6b7280; font-size: 14px;">
+    Assalamu Alaikum
+</footer>
+
+</body>
+</html>
