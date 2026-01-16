@@ -2,82 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MD. ASIF HOSSAIN - PRO SNAKE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game - ASIF HOSSAIN</title>
     <style>
-        body { margin: 0; background: radial-gradient(circle, #2c3e50, #000); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; font-family: sans-serif; touch-action: none; }
-        canvas { background: #111; border: 4px solid #f1c40f; width: 300px; height: 300px; box-shadow: 0 0 30px rgba(241, 196, 15, 0.4); border-radius: 10px; }
-        .stats { display: flex; justify-content: space-between; width: 300px; margin-bottom: 10px; font-size: 20px; font-weight: bold; }
-        .lives { color: #e74c3c; }
-        .score { color: #2ecc71; }
-        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
-        .btn { width: 75px; height: 75px; background: #3498db; border: 3px solid #fff; border-radius: 50%; color: white; font-size: 30px; outline: none; box-shadow: 0 5px #2980b9; -webkit-tap-highlight-color: transparent; }
-        .btn:active { transform: translateY(4px); box-shadow: 0 2px #2980b9; }
-        .dev-name { margin-top: 15px; font-weight: bold; color: #2ecc71; letter-spacing: 1px; text-transform: uppercase; }
+        body { background: #1a202c; color: white; text-align: center; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; }
+        header { background: #2d3748; padding: 10px; border-bottom: 3px solid #facc15; }
+        /* Game Board size boro kora hoyeche */
+        canvas { background: #000; border: 5px solid #facc15; display: block; margin: 10px auto; box-shadow: 0 0 20px rgba(250, 204, 21, 0.5); }
+        .score-board { font-size: 24px; margin: 10px 0; color: #facc15; font-weight: bold; }
+        .controls { margin-top: 10px; }
+        /* Buttons boro kora hoyeche */
+        .btn { background: #facc15; color: #1a202c; padding: 20px; border: none; border-radius: 10px; font-weight: bold; font-size: 20px; margin: 5px; cursor: pointer; width: 90px; }
+        .footer { margin-top: 20px; padding: 15px; background: #2d3748; }
+        .name { color: #facc15; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="stats">
-        <div class="score">SCORE: <span id="s">0</span></div>
-        <div class="lives">LIVES: <span id="l">3</span></div>
-    </div>
-    <canvas id="g" width="400" height="400"></canvas>
-    <div class="dev-name">BY: MD. ASIF HOSSAIN</div>
-    <div class="controls">
-        <button class="btn" style="grid-column:2" onclick="c('u')">▲</button>
-        <button class="btn" style="grid-column:1" onclick="c('l')">◀</button>
-        <button class="btn" style="grid-column:3" onclick="c('r')">▶</button>
-        <button class="btn" style="grid-column:2" onclick="c('d')">▼</button>
-    </div>
 
-    <script>
-        const v=document.getElementById("g"),t=v.getContext("2d");
-        let b=20, s=0, lives=3, d="", f={x:160,y:160}, bonus={x:-100,y:-100}, sn=[{x:200,y:200}], active=false;
+<header><h1>🐍 BIG SNAKE GAME</h1></header>
+<div class="score-board">Score: <span id="scoreVal">0</span></div>
 
-        function speak(txt) {
-            const m=new SpeechSynthesisUtterance(txt);
-            m.rate=1.2;
-            window.speechSynthesis.speak(m);
+<canvas id="snakeGame" width="320" height="320"></canvas>
+
+<div class="controls">
+    <button class="btn" onclick="changeDir('UP')">UP</button><br>
+    <button class="btn" onclick="changeDir('LEFT')">LEFT</button>
+    <button class="btn" onclick="changeDir('DOWN')">DOWN</button>
+    <button class="btn" onclick="changeDir('RIGHT')">RIGHT</button>
+</div>
+
+<div class="footer">
+    <p>Dev: <span class="name">MD. ASIF HOSSAIN</span> | Mentor: <span class="name">ANKIT HOSSAIN SOJIB</span></p>
+    <a href="index.html" style="color: #63b3ed; text-decoration: none;">⬅ Back to Salat Guide</a>
+</div>
+
+<script>
+    const canvas = document.getElementById("snakeGame");
+    const ctx = canvas.getContext("2d");
+    
+    // Sap boro korar jonno box size 20 theke 32 kora hoyeche
+    const box = 32; 
+    let score = 0;
+    let d = "RIGHT";
+    let snake = [{x: 5 * box, y: 5 * box}];
+    let food = {x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box};
+
+    function changeDir(dir) {
+        if(dir == "LEFT" && d != "RIGHT") d = dir;
+        if(dir == "UP" && d != "DOWN") d = dir;
+        if(dir == "RIGHT" && d != "LEFT") d = dir;
+        if(dir == "DOWN" && d != "UP") d = dir;
+    }
+
+    function draw() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for(let i=0; i<snake.length; i++){
+            // Sap er matha Holud r shorir Shobuj
+            ctx.fillStyle = (i==0) ? "#facc15" : "#4ade80";
+            ctx.fillRect(snake[i].x, snake[i].y, box, box);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(snake[i].x, snake[i].y, box, box);
         }
 
-        function c(k){
-            if(!active){active=true; speak("Play");}
-            if(k=='u'&&d!='d')d='u'; if(k=='d'&&d!='u')d='d';
-            if(k=='l'&&d!='r')d='l'; if(k=='r'&&d!='l')d='r';
+        // Khabar Lal r boro
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x, food.y, box, box);
+
+        let snakeX = snake[0].x;
+        let snakeY = snake[0].y;
+
+        if( d == "LEFT") snakeX -= box;
+        if( d == "UP") snakeY -= box;
+        if( d == "RIGHT") snakeX += box;
+        if( d == "DOWN") snakeY += box;
+
+        if(snakeX == food.x && snakeY == food.y){
+            score++;
+            document.getElementById("scoreVal").innerHTML = score;
+            food = {x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box};
+        } else {
+            snake.pop();
         }
 
-        function d3(x,y,c){
-            t.fillStyle=c; t.fillRect(x,y,b,b);
-            t.fillStyle="rgba(255,255,255,0.3)"; t.fillRect(x,y,b,4);
-            t.fillStyle="rgba(0,0,0,0.3)"; t.fillRect(x,y+b-4,b,4);
+        let newHead = {x: snakeX, y: snakeY};
+
+        // Game Over logic
+        if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)){
+            clearInterval(game);
+            alert("Game Over! Score: " + score);
+            location.reload();
         }
 
-        function draw(){
-            t.fillStyle="#111"; t.fillRect(0,0,400,400);
-            d3(f.x,f.y,"#e74c3c");
-            if(s>0 && s%5==0){
-                if(bonus.x<0){bonus={x:Math.floor(Math.random()*19)*b,y:Math.floor(Math.random()*19)*b}; speak("Bonus");}
-                d3(bonus.x,bonus.y,"#f1c40f");
-            }
-            sn.forEach((p,i)=>d3(p.x,p.y,i==0?"#2ecc71":"#27ae60"));
-            if(d=="")return;
-            let hX=sn[0].x, hY=sn[0].y;
-            if(d=="u")hY-=b; if(d=="d")hY+=b; if(d=="l")hX-=b; if(d=="r")hX+=b;
-            if(hX==f.x && hY==f.y){
-                s++; document.getElementById("s").innerText=s;
-                f={x:Math.floor(Math.random()*19)*b,y:Math.floor(Math.random()*19)*b};
-            } else if(hX==bonus.x && hY==bonus.y){
-                s+=5; document.getElementById("s").innerText=s;
-                bonus={x:-100,y:-100}; speak("Great");
-            } else {sn.pop();}
-            let nH={x:hX,y:hY};
-            if(hX<0||hX>=400||hY<0||hY>=400||sn.some(p=>p.x==hX&&p.y==hY)){
-                lives--; document.getElementById("l").innerText=lives;
-                if(lives>0){speak("Careful"); sn=[{x:200,y:200}]; d=""; active=false;}
-                else{speak("Game Over"); alert("Game Over! Score: "+s); location.reload();}
-            } else {sn.unshift(nH);}
+        snake.unshift(newHead);
+    }
+
+    function collision(head, array){
+        for(let i=0; i<array.length; i++){
+            if(head.x == array[i].x && head.y == array[i].y) return true;
         }
-        setInterval(draw, 130);
-    </script>
+        return false;
+    }
+
+    // Speed komanor jonno interval 150 theke 250 kora hoyeche (beshi dile sap dheere cholbe)
+    let game = setInterval(draw, 250); 
+</script>
+
 </body>
 </html>
