@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ASIF'S PRO SNAKE - 3 LIVES</title>
+    <title>MD. ASIF HOSSAIN - PRO SNAKE</title>
     <style>
-        body { margin: 0; background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; font-family: sans-serif; touch-action: none; }
-        canvas { background: #000; border: 4px solid #f1c40f; width: 300px; height: 300px; box-shadow: 0 0 20px #f1c40f; }
+        body { margin: 0; background: radial-gradient(circle, #2c3e50, #000); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; font-family: sans-serif; touch-action: none; }
+        canvas { background: #111; border: 4px solid #f1c40f; width: 300px; height: 300px; box-shadow: 0 0 30px rgba(241, 196, 15, 0.4); border-radius: 10px; }
         .stats { display: flex; justify-content: space-between; width: 300px; margin-bottom: 10px; font-size: 20px; font-weight: bold; }
         .lives { color: #e74c3c; }
         .score { color: #2ecc71; }
-        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
-        .btn { width: 70px; height: 70px; background: #3498db; border: 2px solid #fff; border-radius: 50%; color: white; font-size: 30px; }
-        .dev { margin-top: 15px; color: #2ecc71; font-weight: bold; text-transform: uppercase; border: 1px solid #2ecc71; padding: 5px 10px; }
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
+        .btn { width: 75px; height: 75px; background: #3498db; border: 3px solid #fff; border-radius: 50%; color: white; font-size: 30px; outline: none; box-shadow: 0 5px #2980b9; -webkit-tap-highlight-color: transparent; }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px #2980b9; }
+        .dev-name { margin-top: 15px; font-weight: bold; color: #2ecc71; letter-spacing: 1px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -21,7 +22,7 @@
         <div class="lives">LIVES: <span id="l">3</span></div>
     </div>
     <canvas id="g" width="400" height="400"></canvas>
-    <div class="dev">Dev: MD. ASIF HOSSAIN</div>
+    <div class="dev-name">BY: MD. ASIF HOSSAIN</div>
     <div class="controls">
         <button class="btn" style="grid-column:2" onclick="c('u')">▲</button>
         <button class="btn" style="grid-column:1" onclick="c('l')">◀</button>
@@ -31,70 +32,52 @@
 
     <script>
         const v=document.getElementById("g"),t=v.getContext("2d");
-        let b=20, s=0, lives=3, d="", f={x:160,y:160}, bonus={x:-100,y:-100}, sn=[{x:200,y:200}], gameStarted=false;
+        let b=20, s=0, lives=3, d="", f={x:160,y:160}, bonus={x:-100,y:-100}, sn=[{x:200,y:200}], active=false;
 
-        function speak(text) {
-            const msg = new SpeechSynthesisUtterance();
-            msg.text = text;
-            window.speechSynthesis.speak(msg);
+        function speak(txt) {
+            const m=new SpeechSynthesisUtterance(txt);
+            m.rate=1.2;
+            window.speechSynthesis.speak(m);
         }
 
         function c(k){
-            if(!gameStarted) { gameStarted=true; speak("Play"); }
-            if(k=='u'&&d!='d') d='u'; if(k=='d'&&d!='u') d='d';
-            if(k=='l'&&d!='r') d='l'; if(k=='r'&&d!='l') d='r';
+            if(!active){active=true; speak("Play");}
+            if(k=='u'&&d!='d')d='u'; if(k=='d'&&d!='u')d='d';
+            if(k=='l'&&d!='r')d='l'; if(k=='r'&&d!='l')d='r';
+        }
+
+        function d3(x,y,c){
+            t.fillStyle=c; t.fillRect(x,y,b,b);
+            t.fillStyle="rgba(255,255,255,0.3)"; t.fillRect(x,y,b,4);
+            t.fillStyle="rgba(0,0,0,0.3)"; t.fillRect(x,y+b-4,b,4);
         }
 
         function draw(){
-            t.fillStyle="#000"; t.fillRect(0,0,400,400);
-            
-            // Standard Food
-            t.fillStyle="#e74c3c"; t.fillRect(f.x,f.y,b,b);
-            
-            // Bonus Food
-            if(s > 0 && s % 5 == 0) {
-                if(bonus.x < 0) { bonus={x:Math.floor(Math.random()*19)*b, y:Math.floor(Math.random()*19)*b}; speak("Bonus"); }
-                t.fillStyle="#f1c40f"; t.fillRect(bonus.x,bonus.y,b,b);
+            t.fillStyle="#111"; t.fillRect(0,0,400,400);
+            d3(f.x,f.y,"#e74c3c");
+            if(s>0 && s%5==0){
+                if(bonus.x<0){bonus={x:Math.floor(Math.random()*19)*b,y:Math.floor(Math.random()*19)*b}; speak("Bonus");}
+                d3(bonus.x,bonus.y,"#f1c40f");
             }
-
-            sn.forEach((p,i)=>{
-                t.fillStyle=i==0?"#2ecc71":"#27ae60";
-                t.fillRect(p.x,p.y,b,b);
-            });
-
-            if(d=="") return;
-
+            sn.forEach((p,i)=>d3(p.x,p.y,i==0?"#2ecc71":"#27ae60"));
+            if(d=="")return;
             let hX=sn[0].x, hY=sn[0].y;
-            if(d=="u") hY-=b; if(d=="d") hY+=b;
-            if(d=="l") hX-=b; if(d=="r") hX+=b;
-
-            if(hX==f.x&&hY==f.y){
+            if(d=="u")hY-=b; if(d=="d")hY+=b; if(d=="l")hX-=b; if(d=="r")hX+=b;
+            if(hX==f.x && hY==f.y){
                 s++; document.getElementById("s").innerText=s;
-                f={x:Math.floor(Math.random()*19)*b, y:Math.floor(Math.random()*19)*b};
-            } 
-            else if(hX==bonus.x&&hY==bonus.y){
-                s += 5; document.getElementById("s").innerText=s;
+                f={x:Math.floor(Math.random()*19)*b,y:Math.floor(Math.random()*19)*b};
+            } else if(hX==bonus.x && hY==bonus.y){
+                s+=5; document.getElementById("s").innerText=s;
                 bonus={x:-100,y:-100}; speak("Great");
-            }
-            else { sn.pop(); }
-
+            } else {sn.pop();}
             let nH={x:hX,y:hY};
-
             if(hX<0||hX>=400||hY<0||hY>=400||sn.some(p=>p.x==hX&&p.y==hY)){
-                lives--;
-                document.getElementById("l").innerText=lives;
-                if(lives > 0) {
-                    speak("Careful");
-                    sn=[{x:200,y:200}]; d=""; 
-                } else {
-                    speak("Game Over");
-                    alert("GAME OVER! Final Score: "+s);
-                    location.reload(); return;
-                }
-            }
-            if(d!="") sn.unshift(nH);
+                lives--; document.getElementById("l").innerText=lives;
+                if(lives>0){speak("Careful"); sn=[{x:200,y:200}]; d=""; active=false;}
+                else{speak("Game Over"); alert("Game Over! Score: "+s); location.reload();}
+            } else {sn.unshift(nH);}
         }
-        setInterval(draw, 140);
+        setInterval(draw, 130);
     </script>
 </body>
 </html>
