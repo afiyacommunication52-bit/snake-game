@@ -3,24 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game - ASIF HOSSAIN</title>
+    <title>Big Snake Game - MD. ASIF HOSSAIN</title>
     <style>
-        body { background: #1a202c; color: white; text-align: center; font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; }
-        header { background: #2d3748; padding: 10px; border-bottom: 3px solid #facc15; }
-        /* Game Board size boro kora hoyeche */
-        canvas { background: #000; border: 5px solid #facc15; display: block; margin: 10px auto; box-shadow: 0 0 20px rgba(250, 204, 21, 0.5); }
-        .score-board { font-size: 24px; margin: 10px 0; color: #facc15; font-weight: bold; }
-        .controls { margin-top: 10px; }
-        /* Buttons boro kora hoyeche */
-        .btn { background: #facc15; color: #1a202c; padding: 20px; border: none; border-radius: 10px; font-weight: bold; font-size: 20px; margin: 5px; cursor: pointer; width: 90px; }
-        .footer { margin-top: 20px; padding: 15px; background: #2d3748; }
-        .name { color: #facc15; font-weight: bold; }
+        body { background: #2d3436; color: white; text-align: center; font-family: sans-serif; margin: 0; padding: 0; }
+        header { background: #166534; padding: 15px; border-bottom: 4px solid #facc15; }
+        .score-board { font-size: 24px; margin: 10px; color: #facc15; font-weight: bold; }
+        canvas { background: #000; border: 5px solid #facc15; display: block; margin: 10px auto; border-radius: 10px; }
+        .btn { background: #facc15; color: #1a202c; padding: 20px; border: none; border-radius: 12px; font-weight: bold; font-size: 20px; margin: 5px; width: 95px; box-shadow: 0 5px #b48a04; }
+        .btn:active { box-shadow: none; transform: translateY(4px); }
+        .footer { margin-top: 20px; font-size: 14px; color: #facc15; }
     </style>
 </head>
 <body>
 
-<header><h1>🐍 BIG SNAKE GAME</h1></header>
-<div class="score-board">Score: <span id="scoreVal">0</span></div>
+<header><h1>🐍 REAL BIG SNAKE</h1></header>
+<div class="score-board">SCORE: <span id="scoreVal">0</span></div>
 
 <canvas id="snakeGame" width="320" height="320"></canvas>
 
@@ -32,26 +29,23 @@
 </div>
 
 <div class="footer">
-    <p>Dev: <span class="name">MD. ASIF HOSSAIN</span> | Mentor: <span class="name">ANKIT HOSSAIN SOJIB</span></p>
-    <a href="index.html" style="color: #63b3ed; text-decoration: none;">⬅ Back to Salat Guide</a>
+    Dev: MD. ASIF HOSSAIN | Mentor: ANKIT HOSSAIN SOJIB
 </div>
 
 <script>
     const canvas = document.getElementById("snakeGame");
     const ctx = canvas.getContext("2d");
-    
-    // Sap boro korar jonno box size 20 theke 32 kora hoyeche
     const box = 32; 
     let score = 0;
     let d = "RIGHT";
-    let snake = [{x: 5 * box, y: 5 * box}];
+    let snake = [{x: 5 * box, y: 5 * box}, {x: 4 * box, y: 5 * box}];
     let food = {x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box};
 
     function changeDir(dir) {
         if(dir == "LEFT" && d != "RIGHT") d = dir;
-        if(dir == "UP" && d != "DOWN") d = dir;
-        if(dir == "RIGHT" && d != "LEFT") d = dir;
-        if(dir == "DOWN" && d != "UP") d = dir;
+        else if(dir == "UP" && d != "DOWN") d = dir;
+        else if(dir == "RIGHT" && d != "LEFT") d = dir;
+        else if(dir == "DOWN" && d != "UP") d = dir;
     }
 
     function draw() {
@@ -59,16 +53,24 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for(let i=0; i<snake.length; i++){
-            // Sap er matha Holud r shorir Shobuj
-            ctx.fillStyle = (i==0) ? "#facc15" : "#4ade80";
-            ctx.fillRect(snake[i].x, snake[i].y, box, box);
-            ctx.strokeStyle = "black";
-            ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            // সাপের মাথা হলুদ এবং চোখ থাকবে, শরীর হবে হালকা সবুজ
+            ctx.fillStyle = (i == 0) ? "#facc15" : "#55efc4";
+            ctx.beginPath();
+            ctx.roundRect(snake[i].x, snake[i].y, box-2, box-2, 8);
+            ctx.fill();
+            
+            // সাপের চোখ যোগ করা
+            if(i == 0){
+                ctx.fillStyle = "black";
+                ctx.fillRect(snake[i].x + 20, snake[i].y + 8, 5, 5); 
+            }
         }
 
-        // Khabar Lal r boro
-        ctx.fillStyle = "red";
-        ctx.fillRect(food.x, food.y, box, box);
+        // খাবার হবে লাল বৃত্তের মতো
+        ctx.fillStyle = "#ff7675";
+        ctx.beginPath();
+        ctx.arc(food.x + box/2, food.y + box/2, box/2 - 2, 0, Math.PI * 2);
+        ctx.fill();
 
         let snakeX = snake[0].x;
         let snakeY = snake[0].y;
@@ -88,13 +90,11 @@
 
         let newHead = {x: snakeX, y: snakeY};
 
-        // Game Over logic
         if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)){
             clearInterval(game);
             alert("Game Over! Score: " + score);
             location.reload();
         }
-
         snake.unshift(newHead);
     }
 
@@ -105,8 +105,7 @@
         return false;
     }
 
-    // Speed komanor jonno interval 150 theke 250 kora hoyeche (beshi dile sap dheere cholbe)
-    let game = setInterval(draw, 250); 
+    let game = setInterval(draw, 300); // গতি আরও একটু কমানো হয়েছে (৩০০ মিলি-সেকেন্ড)
 </script>
 
 </body>
